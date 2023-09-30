@@ -18,4 +18,8 @@ class VapController {
   static stop() {
     _channel.invokeMethod('stop');
   }
+
+  static sayHello() {
+    print('Hello from VapController');
+  }
 }
