@@ -1,24 +1,17 @@
 package com.nell.flutter_vap
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.os.Environment
-import android.util.Log
 import android.view.View
-import android.widget.TextView
-import kotlinx.coroutines.GlobalScope
 import com.tencent.qgame.animplayer.AnimConfig
 import com.tencent.qgame.animplayer.AnimView
 import com.tencent.qgame.animplayer.inter.IAnimListener
-import com.tencent.qgame.animplayer.inter.IFetchResource
-import com.tencent.qgame.animplayer.mix.Resource
 import com.tencent.qgame.animplayer.util.ScaleType
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.platform.PlatformView
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -29,7 +22,8 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
     private val vapView: AnimView = AnimView(context)
     private var channel: MethodChannel
     private var methodResult: MethodChannel.Result? = null
-
+    private var loop : Int = 0
+    private var methodCall: MethodCall? = null
     init {
         vapView.setScaleType(ScaleType.FIT_CENTER)
         vapView.setAnimListener(object : IAnimListener {
@@ -52,7 +46,6 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
             }
 
             override fun onVideoDestroy() {
-             
             }
 
             override fun onVideoRender(frameIndex: Int, config: AnimConfig?) {
@@ -77,6 +70,9 @@ internal class NativeVapView(binaryMessenger: BinaryMessenger, context: Context,
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         methodResult = result
+        methodCall = call
+        loop = call.argument<Int>("loop") ?: 0
+        vapView.setLoop(loop);
         when (call.method) {
             "playPath" -> {
                 call.argument<String>("path")?.let {
