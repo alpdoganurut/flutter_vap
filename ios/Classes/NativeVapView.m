@@ -87,7 +87,7 @@
     _wrapView.contentMode = QGVAPWrapViewContentModeAspectFit;
     _wrapView.autoDestoryAfterFinish = YES;
     [self.view addSubview:_wrapView];
-    [_wrapView vapWrapView_playHWDMP4:path repeatCount:0 delegate:self];
+    [_wrapView vapWrapView_playHWDMP4:path repeatCount:-1 delegate:self];
 }
 
 
